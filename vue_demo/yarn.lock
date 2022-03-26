@@ -3421,6 +3421,11 @@ error-stack-parser@^2.0.6:
   dependencies:
     stackframe "^1.1.1"
 
+eruda@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.npmmirror.com/eruda/-/eruda-2.4.1.tgz#dedc9b78546feb827d6ccafbfd7dae480509d2a2"
+  integrity sha512-rI16JoCsyy/pzXbPo7X6EMSUrhbtKZeFZGopiqrmCKxA8GlH61IXjlQAk1SWGpVpkJ6A1z7leuF8EmhFsU+OXQ==
+
 es-module-lexer@^0.9.0:
   version "0.9.3"
   resolved "https://registry.npmmirror.com/es-module-lexer/-/es-module-lexer-0.9.3.tgz#6f13db00cc38417137daf74366f535c8eb438f19"
