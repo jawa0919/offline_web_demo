@@ -90,7 +90,20 @@ class _ShelfWebPageState extends State<ShelfWebPage> {
       trailing: isIndexHtml ? const Icon(Icons.language) : null,
       onTap: () {
         if (isIndexHtml) {
-          _serveDist(context, file);
+          _serveDist(context, file).then((value) {
+            Navigator.of(context).pushNamed("/h5", arguments: {
+              "url": _serverUrl,
+              "title": basename(file.parent.path),
+            });
+          });
+        }
+      },
+      onLongPress: () {
+        if (isIndexHtml && server != null) {
+          Navigator.of(context).pushNamed("/h5", arguments: {
+            "url": _serverUrl + "/#/about",
+            "title": "/#/about",
+          });
         }
       },
     );
@@ -98,7 +111,7 @@ class _ShelfWebPageState extends State<ShelfWebPage> {
 
   String _serverUrl = "";
   HttpServer? server;
-  void _serveDist(BuildContext context, FileSystemEntity file) async {
+  Future<String> _serveDist(BuildContext context, FileSystemEntity file) async {
     server?.close(force: true);
     await Future.delayed(const Duration(milliseconds: 200));
     Pipeline pipeline = const Pipeline();
@@ -117,11 +130,7 @@ class _ShelfWebPageState extends State<ShelfWebPage> {
     _serverUrl = "http://${server?.address.host}:${server?.port}";
     setState(() {});
     WLog.d('Serving at $_serverUrl');
-
     await Future.delayed(const Duration(milliseconds: 200));
-    Navigator.of(context).pushNamed("/h5", arguments: {
-      "url": _serverUrl,
-      "title": basename(file.parent.path),
-    });
+    return _serverUrl;
   }
 }
