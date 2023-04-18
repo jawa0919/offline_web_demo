@@ -14,7 +14,7 @@ dependencies:
 
   cupertino_icons: ^1.0.2
 
-  flutter_w_log: ^0.0.2
+  flutter_w_log: 0.0.2
 
   path_provider: ">=2.0.0 <3.0.0"
   path: ">=1.0.0 <2.0.0"
