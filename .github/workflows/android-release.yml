@@ -1,0 +1,55 @@
+# 自动构建发布安卓Apk
+name: Auto Build And Release Android Apk
+
+# 当一个版本标签推送到仓库时触发工作流
+on:
+  push:
+    tags:
+      - v*
+
+# 工作流程需要执行的任务
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # 步骤
+    steps:
+      # 1.拉取代码
+      - name: Checkout
+        uses: actions/checkout@v2.7.0
+      # 2.安装Java
+      - name: Setup Java
+        uses: actions/setup-java@v1.4.4
+        with:
+          java-version: "11.x"
+      # 3.安装Flutter
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2.10.0
+        with:
+          channel: "stable"
+          flutter-version: "3.7.10"
+      # 4.下载项目依赖
+      - name: Get dependencies
+        run: flutter pub get
+      # # 5.安装安卓签名
+      # - name: Setup Android Sign
+      #   uses: timheuer/base64-to-file@v1.2
+      #   id: android_sign
+      #   with:
+      #     fileName: keystore.jks
+      #     encodedString: ${{ secrets.SIGN_STORE_FILE_BASE64 }}
+      # # 6.添加签名密码
+      # - name: Add Sign Password
+      #   run: |
+      #     echo "SIGN_STORE_FILE=${{ steps.android_sign.outputs.filePath }}" >> android/gradle.properties
+      #     echo "SIGN_STORE_PASSWORD=${{ secrets.SIGN_STORE_PASSWORD }}" >> android/gradle.properties
+      #     echo "SIGN_KEY_ALIAS=${{ secrets.SIGN_KEY_ALIAS }}" >> android/gradle.properties
+      #     echo "SIGN_KEY_PASSWORD=${{ secrets.SIGN_KEY_PASSWORD }}" >> android/gradle.properties
+      # 7.开始打包安卓发布版
+      - name: Start Android Release Build
+        run: flutter build apk --target-platform android-arm64 --split-per-abi
+      # 8.发布到 GitHub Release
+      - name: Push To Release
+        uses: ncipollo/release-action@v1.12.0
+        with:
+          artifacts: "build/app/outputs/apk/release/*.apk"
+          token: ${{ secrets.GITHUB_TOKEN }}
